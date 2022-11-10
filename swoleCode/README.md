@@ -1,1 +1,0 @@
-# John and Daniel's team
