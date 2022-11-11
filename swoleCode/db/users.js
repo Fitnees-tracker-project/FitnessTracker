@@ -1,6 +1,7 @@
 const { client } = require('./index');
 
 async function createUser( {username, password }) {
+    //EZ wokring
    try {
     const result = await client.query(`
         INSERT INTO users ( username, password)
@@ -25,6 +26,7 @@ async function getUser ({ username, password}){
 }
 
 async function getUserById(userId){
+    //working
 try {
     const user = await client.query(`
         SELECT id, username
@@ -38,6 +40,7 @@ try {
 }
 
 async function getUserByUsername(userName){
+    //working
     const user = await client.query(`
         SELECT username
         FROM users

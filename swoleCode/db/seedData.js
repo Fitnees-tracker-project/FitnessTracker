@@ -96,7 +96,7 @@ async function userById() {
     console.log('getting user by id')
     const { rows: [ user ]}  = await getUserById(1)
     console.log('finished getting user')
-    console.log('user obj ', user )
+    console.log('this is get user by Id func ', user )
   } catch (error) {
     console.log(error)
   }
@@ -110,7 +110,7 @@ async function rebuildDB(){
         await createFirstUsers();
         await GetUserByUser();
         // await getTheUser();
-        // await userById();
+        await userById();
     } catch (error) {
         console.log('error building db')
     }
