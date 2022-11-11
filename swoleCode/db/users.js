@@ -14,13 +14,11 @@ async function createUser( {username, password }) {
 
 
 async function getUser ({ username, password}){
+    // this should be able to verify the password against the hashed password
     try {
-        const user = await client.query(`
-            SELECT username, id
-            FROM users
-            WHERE username=${username};
-        `)
-        return user
+       const result = await client.query(`
+        
+       `)
     } catch (error) {
         console.log(error)
     }
@@ -40,11 +38,17 @@ try {
 }
 
 async function getUserByUsername(userName){
-    
+    const user = await client.query(`
+        SELECT username
+        FROM users
+        WHERE username=$1;
+    `, [userName])
+    return user
 }
 
 module.exports = {
     createUser,
     getUser,
-    getUserById
+    getUserById,
+    getUserByUsername
 }
