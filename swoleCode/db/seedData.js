@@ -1,5 +1,5 @@
 const { client } = require('./index')
-const { createUser } = require('./users')
+const { createUser, getUser, getUserById } = require('./users')
 
 
  async function dropTables() {
@@ -72,12 +72,33 @@ async function createFirstUsers(){
   }
 }
 
+async function getTheUser() {
+  try {
+    console.log('getting inital users')
+   
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function userById() {
+  try {
+    console.log('getting user by id')
+    const { rows: [ user ]}  = await getUserById(1)
+    console.log('finished getting user')
+    console.log('user obj ', user )
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 async function rebuildDB(){
     try {
       client.connect()
         await dropTables()
         await createTables()
         await createFirstUsers();
+        await userById();
         client.end();
     } catch (error) {
         console.log('error building db')

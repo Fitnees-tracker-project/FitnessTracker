@@ -14,11 +14,29 @@ async function createUser( {username, password }) {
 
 
 async function getUser ({ username, password}){
-
+    try {
+        const user = await client.query(`
+            SELECT username, id
+            FROM users
+            WHERE username=${username};
+        `)
+        return user
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 async function getUserById(userId){
-
+try {
+    const user = await client.query(`
+        SELECT id, username
+        FROM users
+        WHERE id=${ userId };
+    `)
+    return user
+} catch (error) {
+    console.log(error)
+}
 }
 
 async function getUserByUsername(userName){
@@ -26,5 +44,7 @@ async function getUserByUsername(userName){
 }
 
 module.exports = {
-    createUser
+    createUser,
+    getUser,
+    getUserById
 }
