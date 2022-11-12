@@ -8,5 +8,5 @@ const app = express();
 client.connect();
 
 app.listen(3000, () => {
-    console.log('we are up and running on port 5432')
+    console.log('we are up and running on port 3000')
 });

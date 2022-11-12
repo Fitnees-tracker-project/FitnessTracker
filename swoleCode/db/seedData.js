@@ -72,14 +72,7 @@ async function createFirstUsers(){
   }
 }
 
-async function getTheUser() {
-  try {
-    console.log('getting inital users')
-    await getUser('John31');
-  } catch (error) {
-    console.log(error)
-  }
-}
+
 async function GetUserByUser(){
   try {
     console.log('starting to get user by username')
@@ -109,7 +102,6 @@ async function rebuildDB(){
         await createTables()
         await createFirstUsers();
         await GetUserByUser();
-        // await getTheUser();
         await userById();
     } catch (error) {
         console.log('error building db')

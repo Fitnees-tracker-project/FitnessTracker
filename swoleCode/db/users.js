@@ -1,13 +1,18 @@
 const { client } = require('./index');
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt');
 
 async function createUser( {username, password }) {
+    const SALT_COUNT = 10;
     //EZ wokring
    try {
+    const hashedPassword = await bcrypt.hash(password, SALT_COUNT)
     const result = await client.query(`
         INSERT INTO users ( username, password)
         VALUES($1, $2)
         RETURNING *;
-    `, [username, password])
+    `, [username, hashedPassword])
+    
    } catch (error) {
     console.log(error)
    }
@@ -17,9 +22,14 @@ async function createUser( {username, password }) {
 async function getUser ({ username, password}){
     // this should be able to verify the password against the hashed password
     try {
-       const result = await client.query(`
-        
-       `)
+      const user = await getUserByUsername(username)
+      const hashedPassword = user.password
+      const passwordMatch = await bcrypt.compare(password, hashedPassword)
+      if(passwordMatch){
+        return user.username
+      } else{
+        console.log('Not a valid user!')
+      }
     } catch (error) {
         console.log(error)
     }
