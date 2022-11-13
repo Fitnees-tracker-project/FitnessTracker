@@ -11,7 +11,7 @@ async function createUser( {username, password }) {
         INSERT INTO users ( username, password)
         VALUES($1, $2)
         RETURNING *;
-    `, [username, hashedPassword])
+    `, [username, password])
     
    } catch (error) {
     console.log(error)
