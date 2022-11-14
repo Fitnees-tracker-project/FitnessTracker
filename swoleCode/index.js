@@ -3,14 +3,15 @@ const { client } = require('./db/index')
 const app = express();
 const morgan = require('morgan');
 require('dotenv').config() 
-
 app.use(express.json());
-
+app.use(morgan('dev'));
 
 
 
 const apiRouter = require('./API/index')
+
 app.use('/api', apiRouter)
+
 client.connect();
 
 app.listen(3000, () => {

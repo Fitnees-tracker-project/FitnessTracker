@@ -1,6 +1,6 @@
 const { client } = require('./index')
 const { createUser, getUser, getUserById, getUserByUsername } = require('./users')
-
+const { createRoutine } = require('./routines')
 
  async function dropTables() {
   try {
@@ -72,6 +72,25 @@ async function createFirstUsers(){
   }
 }
 
+async function createRoutines(){
+  try {
+    const DanielW677 = getUserByUsername('DanielW677')
+    const John31 = getUserByUsername('John31')
+    console.log('Starting to create routines...')
+    
+
+    await createRoutine({
+      creatorId: DanielW677.id,
+      isPublic: true,
+      name: "Crunches",
+      goal: "Abs"
+    })
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 async function GetUserByUser(){
   try {
@@ -103,6 +122,7 @@ async function rebuildDB(){
         await createFirstUsers();
         await GetUserByUser();
         await userById();
+        await createRoutines();
     } catch (error) {
         console.log('error building db')
     }

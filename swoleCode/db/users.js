@@ -12,7 +12,6 @@ async function createUser( {username, password }) {
         VALUES($1, $2)
         RETURNING *;
     `, [username, password])
-    
    } catch (error) {
     console.log(error)
    }
@@ -52,7 +51,7 @@ try {
 async function getUserByUsername(userName){
     //working
     const user = await client.query(`
-        SELECT username
+        SELECT username, password
         FROM users
         WHERE username=$1;
     `, [userName])
