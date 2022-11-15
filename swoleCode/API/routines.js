@@ -1,6 +1,9 @@
 const express = require('express');
 const routinesRouter = express.Router();
 const jwt = require('jsonwebtoken');
+const { getRoutine } = require('../db/routines')
+const {requireUser} = require('../API/utils')
+const {createRoutine} = require('../db/routines')
 
 
 routinesRouter.use((req, res, next) => {
@@ -9,24 +12,48 @@ routinesRouter.use((req, res, next) => {
 })
 
 //TEST ROUTE
-routinesRouter.get('/', (req, res, next) => {
-    res.send({
-        message: "Welcome to /routines :D"
-    })
-})
+// routinesRouter.get('/', (req, res, next) => {
+//     res.send({
+//         message: "Welcome to /routines :D"
+//     })
+// })
 
 
 // GET /routines
-routinesRouter.get('/routines', async (req, res, next) => {
-    res.send({
-        message: "Routines"
-    })
+routinesRouter.get('/', async (req, res, next) => {
+    // THIS WILL NEED ACTIVITIES AFTER 
+    //WORKING FOR NOW(COME BACK)
+    try {
+        const routines = await getRoutine();
+        res.send({
+            routines
+        })
+    } catch (error) {
+        console.log(error)
+    }
 })
 // POST /routines *
-routinesRouter.post('/routines', async (req, res) => {
-    res.send({
-        message: 'Routines'
-    })
+routinesRouter.post('/', async (req, res) => {
+    // WORKING-- ADD REQUIRES SIGN IN LATER
+    const { isPublic, name, goal } = req.body
+    const postData = {}
+    try {
+    //    postData.creatorId = req.user.id
+       postData.name = name
+       postData.goal = goal
+       postData.isPublic = isPublic
+       const post = await createRoutine(postData)
+       if(post){
+        res.send({post})
+       }else{
+        res.send({
+            name: "failedToCreatePostError",
+            message: "Get better nerd"
+        })
+       }
+    } catch (error) {
+        console.log(error)
+    }
 })
 // PATCH /routines/:routineId
 routinesRouter.patch('/routines/:routineId', async (req, res, next) => {
@@ -44,18 +71,6 @@ routinesRouter.delete('/routines/:routineId', async (req, res, next) => {
 routinesRouter.post('/routines/:routineId/activities', async (req, res, next) => {
     res.send({
         message: 'message'
-    })
-})
-// PATCH /routine_activities/:routineActivityId
-routinesRouter.patch('/routine_activities/:routineActivityId', async (req, res, next) => {
-    res.send({
-        message: 'New message'
-    })
-})
-// DELETE /routine_activities/:routineActivityId
-routinesRouter.delete('/routine_activitys/:routineActivityId', async (req, res, next) => {
-    res.send({
-        message: 'new message'
     })
 })
 

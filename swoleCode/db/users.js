@@ -11,7 +11,7 @@ async function createUser( {username, password }) {
         INSERT INTO users ( username, password)
         VALUES($1, $2)
         RETURNING *;
-    `, [username, password])
+    `, [username, hashedPassword])
    } catch (error) {
     console.log(error)
    }
@@ -19,11 +19,14 @@ async function createUser( {username, password }) {
 
 
 async function getUser ({ username, password}){
-    // this should be able to verify the password against the hashed password
+    // WORKS -- UNSURE OF USE TBH
     try {
       const user = await getUserByUsername(username)
+
       const hashedPassword = user.password
+
       const passwordMatch = await bcrypt.compare(password, hashedPassword)
+
       if(passwordMatch){
         return user.username
       } else{

@@ -1,9 +1,10 @@
 const express = require('express');
 const usersRouter = express.Router();
 const jwt = require('jsonwebtoken');
-const { getUserByUsername, createUser } = require('../db/users')
+const { getUserByUsername, createUser, getUser } = require('../db/users')
 const { JWT_SECRET } = process.env
 const bcrypt = require('bcrypt')
+const {getAllRoutinesByUser} = require('../db/routines')
 
 usersRouter.use((req, res, next) => {
     console.log('a request is being made to /users!')
@@ -18,7 +19,7 @@ usersRouter.get('/', (req, res, next) => {
 })
 
 //POST /api/users/login
-//NEED TO GET HASHED PASSWORD COMPARE
+//WORKING
 usersRouter.post('/login', async (req, res, next) => {
    const {username, password} = req.body;
    if(!username || !password){
@@ -28,13 +29,16 @@ usersRouter.post('/login', async (req, res, next) => {
     })
    }
    try {
-    const {rows: [user]} = await getUserByUsername(username)
+    const user = await getUserByUsername(username)
     //const passwrd = bcrpy.verify()
+    const rPassword = await bcrypt.compare(password, user.password)
 
     // console.log(rPassword)
-    if(user && user.password == password){
+
+    if(user && rPassword){
         const token = jwt.sign( {id: user.id, username: user.username}, JWT_SECRET)
-        res.send({message: 'You are logged in', token:token})
+        delete user.password
+        res.send({message: 'You are logged in', token:token, user})
     } else{
         next({
             name: "InccorectInfo",
@@ -82,6 +86,7 @@ usersRouter.post('/register', async (req, res, next) => {
 
 //GET /api/users/me
 usersRouter.get('/me', async (req, res, next) => {
+
     res.send('WElcome to your account!')
 })
 
@@ -89,10 +94,12 @@ usersRouter.get('/me', async (req, res, next) => {
 // GET /api/users/:username/routines
 usersRouter.get('/:username/routines', async (req, res, next) => {
     const username = req.params
-    console.log('this is username', username)
+    console.log('this is username', username.username)
     try {
+        const routines = await getAllRoutinesByUser(username.username)
+        console.log('this is rotuines', routines)
         res.send({
-            message: 'This is filler for now'
+            routines
         })
     } catch (error) {
         console.log(error)
