@@ -94,10 +94,11 @@ async function createRoutine({creatorId, isPublic, name, goal}) {
     }
 }
 
-async function updateRoutine({id, ...fields}) {
+async function updateRoutine({id, isPublic, name, goal }) {
+    const id = getRoutineById(id)
     try {
         const result = await client.query(`
-            UPDATE 
+           
         `)
     } catch (error) {
         console.log(error)

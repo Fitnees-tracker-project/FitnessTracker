@@ -73,17 +73,5 @@ routinesRouter.post('/routines/:routineId/activities', async (req, res, next) =>
         message: 'message'
     })
 })
-// PATCH /routine_activities/:routineActivityId
-routinesRouter.patch('/routine_activities/:routineActivityId', async (req, res, next) => {
-    res.send({
-        message: 'New message'
-    })
-})
-// DELETE /routine_activities/:routineActivityId
-routinesRouter.delete('/routine_activitys/:routineActivityId', async (req, res, next) => {
-    res.send({
-        message: 'new message'
-    })
-})
 
 module.exports = routinesRouter;
