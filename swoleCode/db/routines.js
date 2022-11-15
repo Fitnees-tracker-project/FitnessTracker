@@ -29,24 +29,32 @@ async function getAllRoutines() {
 
 }
 
-async function getAllRoutinesByUser({username}) {
-    // COME BACK TO
+async function getAllRoutinesByUser(creatorId) {
+    // WORKING
     try {
-        const user = await getUserByUsername(username)
-       
-       const  rows  = await client.query(`
-        SELECT *
+       const  {rows}  = await client.query(`
+        SELECT name, goal
         FROM routines
-        WHERE creatorid=($1)
-       `, [user])
+        WHERE creatorid=${creatorId}
+       `,)
         return rows
     } catch (error) {
         console.log(error)
     }
 }
 
-async function getPublicRoutinesByUser({username}) {
-
+async function getPublicRoutinesByUser(creatorId) {
+    //WORKING
+    try {
+        const {rows} = await client.query(`
+            SELECT name, goal
+            FROM routines
+            WHERE creatorid=${creatorId} AND ispublic=true;
+        `)
+        return rows
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 async function getAllPublicRoutines() {
@@ -55,7 +63,7 @@ async function getAllPublicRoutines() {
         const {rows} = await client.query(`
             SELECT *
             FROM routines
-            WHERE ispublic=true
+            WHERE ispublic=true;
         `)
         return rows
     } catch (error) {
@@ -87,7 +95,13 @@ async function createRoutine({creatorId, isPublic, name, goal}) {
 }
 
 async function updateRoutine({id, ...fields}) {
-
+    try {
+        const result = await client.query(`
+            UPDATE 
+        `)
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 async function destroyRoutine(id) {
@@ -109,5 +123,6 @@ module.exports = {
     getRoutine,
     getAllRoutinesByUser,
     getAllPublicRoutines,
-    destroyRoutine
+    destroyRoutine,
+    getPublicRoutinesByUser
 }

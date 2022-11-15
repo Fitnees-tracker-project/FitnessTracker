@@ -1,6 +1,6 @@
 const { client } = require('./index')
 const { createUser, getUser, getUserById, getUserByUsername } = require('./users')
-const { createRoutine, getRoutineById, getRoutine, getAllRoutinesByUser, getAllPublicRoutines, destroyRoutine } = require('./routines')
+const { createRoutine, getRoutineById, getRoutine, getAllRoutinesByUser, getAllPublicRoutines, destroyRoutine, getPublicRoutinesByUser } = require('./routines')
 
  async function dropTables() {
   try {
@@ -77,7 +77,6 @@ async function createRoutines(){
     const DanielW677 = await getUserByUsername('DanielW677')
     const John31 = await getUserByUsername('John31')
     console.log('Starting to create routines...')
-    // console.log('this id me', DanielW677.id)
 
     await createRoutine({
       creatorId: DanielW677.id,
@@ -94,7 +93,7 @@ async function createRoutines(){
     })
 
     await createRoutine({
-      creatorId: DanielW677.id,
+      creatorId: John31.id,
       isPublic: true,
       name: "Bench Press",
       goal: "Chest growth"
@@ -104,6 +103,11 @@ async function createRoutines(){
   }
 }
 
+async function testCompare(){
+  console.log('Comparing hashed password to password input')
+  const result = await getUser({username: "DanielW677", password: "P@ssW0rd"})
+  console.log('Finished comparing here is result', result)
+}
 
 async function GetUserByUser(){
   try {
@@ -144,9 +148,21 @@ async function getRoutines(){
 async function routineByUser(){
   try {
     console.log('starting to get get routines by user')
-    const result = await getAllRoutinesByUser("DanielW677")
+
+    const result = await getAllRoutinesByUser(1)
+
     console.log('finished getting routines by user')
+
     console.log('these are the routines', result)
+  } catch (error) {
+    console.log(error)
+  }
+}
+async function pubRoutinesByUser(){
+  try {
+    console.log('starting to get all pub routines by user')
+    const result = await getPublicRoutinesByUser(2)
+    console.log('Finished getting pub routiens by user', result)
   } catch (error) {
     console.log(error)
   }
@@ -184,11 +200,13 @@ async function rebuildDB(){
         await createFirstUsers();
         // await GetUserByUser();
         // await userById();
+        // await testCompare();
         await createRoutines();
         // await routineById();
         // await getRoutines();
         // await routineByUser();
         // await allPubRoutines()
+        // await pubRoutinesByUser();
         // await deleteRoutine();
     } catch (error) {
         console.log('error building db')
