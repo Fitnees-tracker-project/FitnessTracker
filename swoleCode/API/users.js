@@ -18,6 +18,7 @@ usersRouter.get('/', (req, res, next) => {
 })
 
 //POST /api/users/login
+//NEED TO GET HASHED PASSWORD COMPARE
 usersRouter.post('/login', async (req, res, next) => {
    const {username, password} = req.body;
    if(!username || !password){
@@ -48,6 +49,7 @@ usersRouter.post('/login', async (req, res, next) => {
 
 //POST /api/users/register
 usersRouter.post('/register', async (req, res, next) => {
+    // WORKING
     const { username, password } = req.body
     try {
         const user = await getUserByUsername(username)
@@ -64,6 +66,7 @@ usersRouter.post('/register', async (req, res, next) => {
             password
         })
 
+
         const token = jwt.sign({
             id: newUser.id,
             username
@@ -72,7 +75,6 @@ usersRouter.post('/register', async (req, res, next) => {
             message: 'Welcome to your new account',
             token
         })
-
     } catch (error) {
         console.log(error)
     }

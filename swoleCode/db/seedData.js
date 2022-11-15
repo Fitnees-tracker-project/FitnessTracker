@@ -1,6 +1,6 @@
 const { client } = require('./index')
 const { createUser, getUser, getUserById, getUserByUsername } = require('./users')
-const { createRoutine, getRoutineById } = require('./routines')
+const { createRoutine, getRoutineById, getRoutine, getAllRoutinesByUser, getAllPublicRoutines, destroyRoutine } = require('./routines')
 
  async function dropTables() {
   try {
@@ -92,6 +92,13 @@ async function createRoutines(){
       name: "Dumbell chest press",
       goal: "get massive pecs"
     })
+
+    await createRoutine({
+      creatorId: DanielW677.id,
+      isPublic: true,
+      name: "Bench Press",
+      goal: "Chest growth"
+    })
   } catch (error) {
     console.log(error)
   }
@@ -127,6 +134,48 @@ async function routineById(){
   console.log(chestPress)
 }
 
+async function getRoutines(){
+  console.log('starting to get routine without activity')
+  const result = await getRoutine()
+  console.log('finished getting routine without activity')
+  console.log(result)
+}
+
+async function routineByUser(){
+  try {
+    console.log('starting to get get routines by user')
+    const result = await getAllRoutinesByUser("DanielW677")
+    console.log('finished getting routines by user')
+    console.log('these are the routines', result)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function allPubRoutines(){
+  try {
+    console.log('starting to get all pub routines')
+    const result = await getAllPublicRoutines()
+    console.log('done getting all pub routiens')
+    console.log('this is result', result)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function deleteRoutine(){
+  try {
+    console.log('Starting to delete row')
+    await destroyRoutine(1)
+    console.log('Deleted routine')
+    const result = await getAllPublicRoutines();
+    console.log(result)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
 async function rebuildDB(){
     try {
       client.connect()
@@ -136,7 +185,11 @@ async function rebuildDB(){
         // await GetUserByUser();
         // await userById();
         await createRoutines();
-        await routineById();
+        // await routineById();
+        // await getRoutines();
+        // await routineByUser();
+        // await allPubRoutines()
+        // await deleteRoutine();
     } catch (error) {
         console.log('error building db')
     }
