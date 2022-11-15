@@ -1,7 +1,17 @@
 const { client } = require('./index')
 
 async function getRoutineById(id){
-
+    // working
+    try {
+        const {rows: [user]} = await client.query(`
+            SELECT id, name, goal
+            FROM routines
+            WHERE id=${id}
+        `)
+        return user
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 async function getRoutinesWithoutActivities(){
@@ -54,5 +64,6 @@ async function destroyRoutine(id) {
 
 
 module.exports = {
-    createRoutine
+    createRoutine,
+    getRoutineById
 }

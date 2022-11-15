@@ -50,8 +50,8 @@ try {
 
 async function getUserByUsername(userName){
     //working
-    const user = await client.query(`
-        SELECT username, password
+    const {rows: [user]} = await client.query(`
+        SELECT username, password, id
         FROM users
         WHERE username=$1;
     `, [userName])

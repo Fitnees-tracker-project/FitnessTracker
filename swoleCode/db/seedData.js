@@ -1,6 +1,6 @@
 const { client } = require('./index')
 const { createUser, getUser, getUserById, getUserByUsername } = require('./users')
-const { createRoutine } = require('./routines')
+const { createRoutine, getRoutineById } = require('./routines')
 
  async function dropTables() {
   try {
@@ -34,8 +34,8 @@ async function createTables() {
       );
       CREATE TABLE routines (
         id SERIAL PRIMARY KEY,
-        "creatorId" INTEGER REFERENCES  users(id),
-        "isPublic" BOOLEAN DEFAULT false,
+        "creatorid" INTEGER REFERENCES  users(id),
+        "ispublic" BOOLEAN DEFAULT false,
         name VARCHAR(255) UNIQUE NOT NULL,
         goal TEXT NOT NULL
       );
@@ -74,10 +74,10 @@ async function createFirstUsers(){
 
 async function createRoutines(){
   try {
-    const DanielW677 = getUserByUsername('DanielW677')
-    const John31 = getUserByUsername('John31')
+    const DanielW677 = await getUserByUsername('DanielW677')
+    const John31 = await getUserByUsername('John31')
     console.log('Starting to create routines...')
-    
+    // console.log('this id me', DanielW677.id)
 
     await createRoutine({
       creatorId: DanielW677.id,
@@ -86,6 +86,12 @@ async function createRoutines(){
       goal: "Abs"
     })
 
+    await createRoutine({
+      creatorId: John31.id,
+      isPublic: false,
+      name: "Dumbell chest press",
+      goal: "get massive pecs"
+    })
   } catch (error) {
     console.log(error)
   }
@@ -114,15 +120,23 @@ async function userById() {
   }
 }
 
+async function routineById(){
+  console.log('getting routine by Id')
+  const chestPress = await getRoutineById(2)
+  console.log('finished getting routine by Id')
+  console.log(chestPress)
+}
+
 async function rebuildDB(){
     try {
       client.connect()
         await dropTables()
         await createTables()
         await createFirstUsers();
-        await GetUserByUser();
-        await userById();
+        // await GetUserByUser();
+        // await userById();
         await createRoutines();
+        await routineById();
     } catch (error) {
         console.log('error building db')
     }
