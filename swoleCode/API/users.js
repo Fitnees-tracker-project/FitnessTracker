@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const { getUserByUsername, createUser, getUser } = require('../db/users')
 const { JWT_SECRET } = process.env
 const bcrypt = require('bcrypt')
-const {getAllRoutinesByUser} = require('../db/routines')
+const {getAllRoutinesByUser, getPublicRoutinesByUser, getAllPublicRoutines} = require('../db/routines')
 
 usersRouter.use((req, res, next) => {
     console.log('a request is being made to /users!')
@@ -86,20 +86,37 @@ usersRouter.post('/register', async (req, res, next) => {
 
 //GET /api/users/me
 usersRouter.get('/me', async (req, res, next) => {
-
-    res.send('WElcome to your account!')
+    //Send back the logged-in user's data if a valid token is supplied in the header.
+    const token = // CANT GET TOKEN
+    console.log('this is token', token)
+    try {
+       if(token){
+        res.send({
+            username,
+            id
+        })
+       } else {
+        res.send({
+            name: "NoAuthorizationError",
+            message: "You need a valid login token to see this page!"
+        })
+       }
+    } catch (error) {
+        console.error(error.detail)
+    }
 })
 
 
 // GET /api/users/:username/routines
-usersRouter.get('/:username/routines', async (req, res, next) => {
-    const username = req.params
-    console.log('this is username', username.username)
+usersRouter.get('/:userId/routines', async (req, res, next) => {
+    // WORKING
+    const userId = req.params
+    // console.log('this is userId', userId.userId)
+    const pubRoutines = await getPublicRoutinesByUser(userId.userId)
+    console.log(pubRoutines)
     try {
-        const routines = await getAllRoutinesByUser(username.username)
-        console.log('this is rotuines', routines)
         res.send({
-            routines
+            pubRoutines
         })
     } catch (error) {
         console.log(error)

@@ -1,9 +1,9 @@
 const express = require('express');
 const routinesRouter = express.Router();
 const jwt = require('jsonwebtoken');
-const { getRoutine } = require('../db/routines')
+const { getRoutine, getAllPublicRoutines } = require('../db/routines')
 const {requireUser} = require('../API/utils')
-const {createRoutine} = require('../db/routines')
+const {createRoutine, updateRoutine, destroyRoutine} = require('../db/routines')
 
 
 routinesRouter.use((req, res, next) => {
@@ -56,16 +56,36 @@ routinesRouter.post('/', async (req, res) => {
     }
 })
 // PATCH /routines/:routineId
-routinesRouter.patch('/routines/:routineId', async (req, res, next) => {
+routinesRouter.patch('/:routineId', async (req, res, next) => {
+    //WORKING
+    const {routineId} = req.params
+    const {isPublic, name, goal} = req.body
+    console.log('this is routineId', routineId)
+   try {
+    const updatedRoutine = await updateRoutine({id: routineId, isPublic, name, goal})
+    console.log(updatedRoutine)
+    const routines = await getAllPublicRoutines()
     res.send({
-        message: 'Message'
+        routines
     })
+   } catch (error) {
+    console.error(error.detail)
+   }
 })
 //DELETE /routines/:routineId
-routinesRouter.delete('/routines/:routineId', async (req, res, next) => {
+routinesRouter.delete('/:routineId', async (req, res, next) => {
+    //WORKING
+    const {routineId} = req.params
+    console.log('this is routineId', routineId)
+ try {
+    const deletedRoutine = await destroyRoutine(routineId)
+    const routines = await getAllPublicRoutines();
     res.send({
-        message: "message"
+        routines
     })
+ } catch (error) {
+    console.error(error.detail)
+ }
 })
 // POST /routines/:routineId/activities
 routinesRouter.post('/routines/:routineId/activities', async (req, res, next) => {
