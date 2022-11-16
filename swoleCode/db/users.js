@@ -19,7 +19,7 @@ async function createUser( {username, password }) {
 
 
 async function getUser ({ username, password}){
-    // WORKS -- UNSURE OF USE TBH
+    // WORKS
     try {
       const user = await getUserByUsername(username)
 

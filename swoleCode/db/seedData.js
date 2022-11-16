@@ -1,6 +1,7 @@
 const { client } = require('./index')
 const { createUser, getUser, getUserById, getUserByUsername } = require('./users')
-const { createRoutine, getRoutineById, getRoutine, getAllRoutinesByUser, getAllPublicRoutines, destroyRoutine, getPublicRoutinesByUser } = require('./routines')
+const { createRoutine, getRoutineById, getRoutine, getAllRoutinesByUser, getAllPublicRoutines, destroyRoutine, getPublicRoutinesByUser, updateRoutine } = require('./routines')
+const { createActivity, getActivityById, getAllActivities } = require('./activities')
 
  async function dropTables() {
   try {
@@ -98,8 +99,26 @@ async function createRoutines(){
       name: "Bench Press",
       goal: "Chest growth"
     })
+    console.log('done creating routines')
   } catch (error) {
     console.log(error)
+  }
+}
+async function createFirstActivity(){
+  try {
+    console.log('starting to create activites')
+    await createActivity({
+      name: "Unsure",
+      description: "More words"
+    })
+
+    await createActivity({
+      name: "Activity 2",
+      description: "More words again"
+    })
+    console.log('finished creating acts')
+  } catch (error) {
+    console.error(error.detail)
   }
 }
 
@@ -191,6 +210,35 @@ async function deleteRoutine(){
   }
 }
 
+async function updateroutine(){
+  try {
+    console.log('attempting update')
+    const result = await updateRoutine({id: 1, isPublic: false, name: "Running", goal: "Get fit"})
+    console.log('done updating post')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function getAct(){
+  try {
+    console.log('starting to get acts')
+    const result = await getAllActivities();
+    console.log('done getting acts', result)
+  } catch (error) {
+    console.error(error.deatil)
+  }
+}
+
+async function getActById(){
+  try {
+    console.log('geting act by id')
+    const result = await getActivityById(2)
+    console.log('done getting act by id', result)
+  } catch (error) {
+    console.error(error.deatil)
+  }
+}
 
 async function rebuildDB(){
     try {
@@ -208,6 +256,10 @@ async function rebuildDB(){
         // await allPubRoutines()
         // await pubRoutinesByUser();
         // await deleteRoutine();
+        // await updateroutine()
+        await createFirstActivity();
+        // await getAct()
+        // await getActById()
     } catch (error) {
         console.log('error building db')
     }

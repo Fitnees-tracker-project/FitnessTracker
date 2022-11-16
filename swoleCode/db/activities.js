@@ -1,12 +1,12 @@
-const client = require("./client")
+const {client} = require("./index")
 
 async function getAllActivities() {
     try {
-        const { row: activites } = await client.query(`
+        const { rows } = await client.query(`
         SELECT *
-        FROM activities 
+        FROM activities;
 `);
-        return activites;
+        return rows;
     } catch (error) {
         console.log("Error on getting activities")
         throw error;
@@ -31,10 +31,10 @@ async function getActivityById(activityId) {
 async function createActivity({ name, description }) {
     try {
         const { rows: [activity] } = await client.query(`
-        INSEERT INTO activities(name, description)
+        INSERT INTO activities (name, description)
         VALUES($1, $2)
-        ON CONFLICT(name) DO NOTHING
-        RETURNING *
+        ON CONFLICT (name) DO NOTHING
+        RETURNING *;
         `, [name, description]);
 
         return activity; 
@@ -44,7 +44,9 @@ async function createActivity({ name, description }) {
     }
 }
 
-async function updateActivity ({ id, name, description }) 
+async function updateActivity ({ id, name, description }) {
+    
+}
 
 module.exports = {
     getAllActivities,
