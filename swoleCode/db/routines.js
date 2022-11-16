@@ -26,6 +26,7 @@ async function getRoutine(){
 
 async function getAllRoutines() {
     //Not sure what activity is RN - SKIP
+    
 
 }
 
@@ -95,13 +96,19 @@ async function createRoutine({creatorId, isPublic, name, goal}) {
 }
 
 async function updateRoutine({id, isPublic, name, goal }) {
-    const id = getRoutineById(id)
+  // WORKS
     try {
         const result = await client.query(`
-           
-        `)
+           UPDATE routines
+           SET isPublic=$1,
+                name=$2,
+                goal=$3
+           WHERE id=${id}
+           RETURNING *;
+        `, [isPublic, name, goal])
+        return result
     } catch (error) {
-        console.log(error)
+        console.error(error.detail)
     }
 }
 
@@ -125,5 +132,6 @@ module.exports = {
     getAllRoutinesByUser,
     getAllPublicRoutines,
     destroyRoutine,
-    getPublicRoutinesByUser
+    getPublicRoutinesByUser,
+    updateRoutine
 }
