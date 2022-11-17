@@ -1,15 +1,20 @@
 const express = require('express'); 
 const activitiesRouter = express.Router();
-const { createActivity, updateActivity, getAllActivities, getPublicRoutinesByActivity } = require("../db");
-const { post } = require('./users');
-const { requireUser } = require("./utilities"); 
+const jwt = require ('jsonwebtoken');
+const { getAllActivities, getPublicRoutinesByActivity } = require('../db/activities');
+const { requireUser } = require("../API/utils"); 
+const { createActivity, updateActivity} = require ('.//db/activities')
 
 //GET /activities 
-activitiesRouter.get('/', async (req, res) => {
+activitiesRouter.get('/', async (req, res, next) => {
+try {
     const activities = await getAllActivities();
     res.send({ 
         activities 
-    });
+    })
+} catch (error) {
+    console.log("error in getting all activities")
+}
 }); 
 
 //POST /activities 
