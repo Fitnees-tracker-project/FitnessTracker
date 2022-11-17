@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const { getRoutine, getAllPublicRoutines } = require('../db/routines')
 const {requireUser} = require('../API/utils')
 const {createRoutine, updateRoutine, destroyRoutine} = require('../db/routines')
-
+const {addActivityToRoutine} = require('../db/routine-activities')
 
 routinesRouter.use((req, res, next) => {
     console.log('A request is being made to /routines')
@@ -88,10 +88,20 @@ routinesRouter.delete('/:routineId', async (req, res, next) => {
  }
 })
 // POST /routines/:routineId/activities
-routinesRouter.post('/routines/:routineId/activities', async (req, res, next) => {
-    res.send({
-        message: 'message'
-    })
+routinesRouter.post('/:routineid/activities', async (req, res, next) => {
+    // WORKING
+    const {routineid} = req.params
+    const {activityid, count, duration} = req.body
+    console.log('this is routineId', routineid)
+
+    try {
+        const newAct = await addActivityToRoutine({routineid, activityid, count, duration})
+        res.send({
+            newAct
+        })
+    } catch (error) {
+        console.error(error.deatil)
+    }
 })
 
 module.exports = routinesRouter;
