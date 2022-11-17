@@ -10,7 +10,7 @@ const routineActivitiesRouter = require('./routine-activities')
 apiRouter.use('/users', usersRouter)
 apiRouter.use('/routines', routineRouter)
 apiRouter.use('/activities', activitiesRouter)
-apiRouter.use('/routine-activities', routineActivitiesRouter)
+apiRouter.use('/routineactivities', routineActivitiesRouter)
 
 apiRouter.use((error, req, res, next) => {
     res.send({

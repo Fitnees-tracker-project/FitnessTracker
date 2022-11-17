@@ -19,7 +19,7 @@ try {
 
 //POST /activities 
 activitiesRouter.post('/', async (req,res) => {
-    //work on sign ins later
+    
     const { name, description } = req.body
     const postData = {}
     try{
