@@ -1,17 +1,18 @@
 const express = require('express'); 
-const router = express.Router(); 
+const activitiesRouter = express.Router(); 
 const {
     getRoutineActivityById,
-    addActivityToRoutine,
+    getRoutineById,
     updateRoutineActivity,
     destroyRoutineActivity
 } = require ("../db"); 
 
 //PATCH /routineactivities/:routineActivityId 
-addActivityToRoutine.patch('/:routineActivityId', async (req, res, next) => {
+activitiesRouter.patch('/:routineActivityId', async (req, res, next) => {
     const { routineActivityId } = req.params
     const { count, duration } = req.body
     console.log('this is routineActivityId', routineActivityId)
+    //might need to add login later
 try {
     const updatedRoutineActivity = await updateRoutineActivity ({id: count, duration})
     console.log(updatedRoutineActivity)
@@ -21,3 +22,20 @@ try {
     }
 })
 
+//DELETE /routine_activities/:routineActivityId
+activitiesRouter.delete('/:routineActivityId', async (req, res, next) => {
+    const { routineActivityId } = req.params
+    console.log('this is routineActivityId', routineActivityId)
+try {
+    const routineActivity = await getRoutineActivityById (routineActivityId);
+    const routine = await getRoutineById (routineActivity.routineId);
+    //might need to add login later
+    const destroyActivityFromRoutine = await destroyRoutineActivity (routineActivityId)
+res.send(destroyActivityFromRoutine);
+//this part might be wrong
+} catch (error){
+    console.error(error.detail)
+}
+})
+
+module.exports = activitiesRouter;
