@@ -24,7 +24,6 @@ async function addActivityToRoutine ({
         const { rows: [routine_activity] } = await client.query (`
         INSERT INTO routine_activities ("routineId", "activityId", count, duration)
         VALUES ($1, $2, $3, $4)
-        ON CONFLICT ("routineId", "activityId") DO NOTHING
         RETURNING *;
         `, [routineId, activityId, count, duration]);
         
@@ -34,8 +33,20 @@ async function addActivityToRoutine ({
     }
 }
 
-async function updateRoutineActivity({ id, count, duration })
-//come back to it 
+async function updateRoutineActivity({ id, count, duration }){
+    try {
+        const result = await client.query(`
+        UPDATE routineactivity 
+        SET count= $1,
+            duration= $2
+        WHERE id=${id}
+        RETURNING *; 
+        `, [count, duration])
+        return result
+    } catch (error) {
+        console.log("error in updating routine activity")
+    }
+}
 
 async function destroyRoutineActivity(id) {
     try {

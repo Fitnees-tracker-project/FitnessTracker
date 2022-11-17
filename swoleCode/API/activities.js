@@ -3,7 +3,7 @@ const activitiesRouter = express.Router();
 const jwt = require ('jsonwebtoken');
 const { getAllActivities, getPublicRoutinesByActivity } = require('../db/activities');
 const { requireUser } = require("../API/utils"); 
-const { createActivity, updateActivity} = require ('.//db/activities')
+const { createActivity, updateActivity} = require ('../db/activities')
 
 //GET /activities 
 activitiesRouter.get('/', async (req, res, next) => {
@@ -41,10 +41,12 @@ activitiesRouter.post('/', async (req,res) => {
 });
 
 //PATCH /activities/:activityId
-activitiesRouter.patch('/:routineId', async (req, res, ))
+//activitiesRouter.patch('/:routineId', async (req, res, ))
 
 //GET /activities/:activityId/routines
 activitiesRouter.get('/:activityId/routines', async (req, res, next) => {
+    const { activityId } = req.params
+    console.log(activityId)
     try {
       const routines = await getPublicRoutinesByActivity(activity);
     res.send(routines);
