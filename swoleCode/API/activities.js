@@ -41,18 +41,11 @@ activitiesRouter.patch('/:routineId', async (req, res, ))
 //GET /activities/:activityId/routines
 activitiesRouter.get('/:activityId/routines', async (req, res, next) => {
     try {
-        const id = req.params.activityId;
-        const activity = { id: id };
       const routines = await getPublicRoutinesByActivity(activity);
-      if (routines.length === 0)
-        res.send({
-          message: `Activity ${id} not found`,
-          name: 'ActivityDoesNotExistError',
-          error: 'Activity does not exist',
-        });
-      res.send(routines);
-    } catch ({ name, message }) {
-      next({ name, message });
+    res.send(routines);
+
+    } catch (error) {
+      console.log(error)
     }
   });
 
