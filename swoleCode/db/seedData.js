@@ -1,8 +1,8 @@
 const { client } = require('./index')
 const { createUser, getUser, getUserById, getUserByUsername } = require('./users')
-const { createRoutine, getRoutineById, getRoutine, getAllRoutinesByUser, getAllPublicRoutines, destroyRoutine, getPublicRoutinesByUser, updateRoutine } = require('./routines')
+const { createRoutine, getRoutineById, getRoutine, getAllRoutinesByUser, getAllPublicRoutines, destroyRoutine, getPublicRoutinesByUser, updateRoutine, getPublicRoutinesByActivity } = require('./routines')
 const { createActivity, getActivityById, getAllActivities } = require('./activities')
-
+const {addActivityToRoutine, destroyRoutineActivity, updateRoutineActivity, getRoutineActivityById, getRoutineActivityByRoutine} = require('./routine-activities')
  async function dropTables() {
   try {
     console.log('starting to drop tables')
@@ -42,8 +42,8 @@ async function createTables() {
       );
       CREATE TABLE routineactivities (
         id SERIAL PRIMARY KEY,
-        "routineId" INTEGER REFERENCES routines(id),
-        "activityId" INTEGER REFERENCES activities(id),
+        "routineid" INTEGER REFERENCES routines(id),
+        "activityid" INTEGER REFERENCES activities(id),
         duration INTEGER,
         count INTEGER
       );
@@ -121,6 +121,7 @@ async function createFirstActivity(){
     console.error(error.detail)
   }
 }
+
 
 async function testCompare(){
   console.log('Comparing hashed password to password input')
@@ -240,6 +241,55 @@ async function getActById(){
   }
 }
 
+async function addActRoutine(){
+  try {
+    console.log('adding acts to routine')
+    const result = await addActivityToRoutine({routineid: 1, activityid: 2, count: 10, duration: 10})
+    // console.log('done adding act to routine', result)
+  } catch (error) {
+    console.error(error.deatil)
+  }
+}
+
+async function routineActById(){
+  try {
+    console.log('Start to call act by id')
+    const result = await getActivityById(1)
+    console.log('finished getting routine by id', result)
+  } catch (error) {
+    console.error(error.detail)
+  }
+}
+
+async function deleteRoutineAct(){
+  try {
+    console.log('starting to delete routine act')
+    const result = await destroyRoutineActivity(1)
+    console.log('finished deleting routeAct')
+  } catch (error) {
+    console.error(error.deatil)
+  }
+}
+
+async function getRoutActByRout(){
+  try {
+    console.log('starting to get rout act')
+    const result = await getRoutineActivityByRoutine({id: 1})
+    console.log('done', result)
+  } catch (error) {
+    console.error(error.detail)
+  }
+}
+
+async function getPubRoutByAct(){
+  try {
+    console.log('starting to get pub')
+    const result = await getPublicRoutinesByActivity({id: 1})
+    console.log('done', result)
+  } catch (error) {
+    console.error(error.detail)
+  }
+}
 async function rebuildDB(){
     try {
       client.connect()
@@ -258,12 +308,18 @@ async function rebuildDB(){
         // await deleteRoutine();
         // await updateroutine()
         await createFirstActivity();
+        await addActRoutine();
         // await getAct()
         // await getActById()
+        //  await routineActById();
+        // await deleteRoutineAct();
+        // await getRoutActByRout()
+        // await getPubRoutByAct();
     } catch (error) {
         console.log('error building db')
     }
 }
+
 
 rebuildDB()
   .catch(console.error)
