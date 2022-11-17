@@ -24,12 +24,6 @@ async function getRoutine(){
     return rows
 }
 
-async function getAllRoutines() {
-    //Not sure what activity is RN - SKIP
-    
-
-}
-
 async function getAllRoutinesByUser(creatorId) {
     // WORKING
     try {
@@ -74,8 +68,15 @@ async function getAllPublicRoutines() {
 
 async function getPublicRoutinesByActivity({id}) {
     // COME BACK AFTER ACTIVITYS ARE DONE
+    // NEEDS JOINED ROUTINE ACTS
+    // MAY HAVE TO SKIP
     try {
-        
+        const {rows } = await client.query(`
+        SELECT *
+        FROM routines
+        WHERE activityid=${id}
+        `)
+        return rows
     } catch (error) {
         console.log(error)
     }
@@ -133,5 +134,6 @@ module.exports = {
     getAllPublicRoutines,
     destroyRoutine,
     getPublicRoutinesByUser,
-    updateRoutine
+    updateRoutine,
+    getPublicRoutinesByActivity
 }

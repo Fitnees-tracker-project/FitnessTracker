@@ -16,16 +16,16 @@ async function getRoutineActivityById(id) {
 }
 
 async function addActivityToRoutine ({ 
-    routineId, 
-    activityId, 
+    routineid, 
+    activityid, 
     count, 
     duration}) {
     try {
         const { rows: [routine_activity] } = await client.query (`
-        INSERT INTO routine_activities ("routineId", "activityId", count, duration)
+        INSERT INTO routineactivities ("routineid", "activityid", count, duration)
         VALUES ($1, $2, $3, $4)
         RETURNING *;
-        `, [routineId, activityId, count, duration]);
+        `, [routineid, activityid, count, duration]);
         
         return routine_activity; 
     }catch (error){
@@ -34,29 +34,17 @@ async function addActivityToRoutine ({
 }
 
 async function updateRoutineActivity({ id, count, duration }){
-    try {
-        const result = await client.query(`
-        UPDATE routineactivity 
-        SET count= $1,
-            duration= $2
-        WHERE id=${id}
-        RETURNING *; 
-        `, [count, duration])
-        return result
-    } catch (error) {
-        console.log("error in updating routine activity")
-    }
+    
 }
+//come back to it 
 
 async function destroyRoutineActivity(id) {
     try {
-        const { rows: [routine_activity] } = await client.query(`
-        DELETE FROM routine_activities
-        WHERE id = $1
-        RETURNING *
-        ` [id]);
-
-        return routine_activity;
+        const result = await client.query(`
+        DELETE FROM routineactivities
+        WHERE id = ${id}
+        `);
+        return result;
     } catch (error) {
         console.log ("Error in destroying routine activity")
         throw error;
@@ -65,13 +53,13 @@ async function destroyRoutineActivity(id) {
 
 async function getRoutineActivityByRoutine({ id }) {
     try {
-        const { rows: routine_activity } = await client.query(`
+        const { rows } = await client.query(`
         SELECT *
-        FROM routine activities
-        WHERE "routineId"=$1;
-        `, [id]);
+        FROM routineactivities
+        WHERE "routineid"=${id};
+        `,);
 
-        return routine_activity;
+        return rows;
     } catch (error) {
         console.log ("Error in getting routine activities by routine")
         throw error;
