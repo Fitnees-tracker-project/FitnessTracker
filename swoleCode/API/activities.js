@@ -12,7 +12,7 @@ activitiesRouter.get('/', async (req, res) => {
     });
 }); 
 
-//POST /activities (*)
+//POST /activities 
 activitiesRouter.post('/', async (req,res) => {
     //work on sign ins later
     const { name, description } = req.body
@@ -34,4 +34,28 @@ activitiesRouter.post('/', async (req,res) => {
         console.log(error)
     }
 });
+
+//PATCH /activities/:activityId
+activitiesRouter.patch('/:routineId', async (req, res, ))
+
+//GET /activities/:activityId/routines
+activitiesRouter.get('/:activityId/routines', async (req, res, next) => {
+    try {
+        const id = req.params.activityId;
+        const activity = { id: id };
+      const routines = await getPublicRoutinesByActivity(activity);
+      if (routines.length === 0)
+        res.send({
+          message: `Activity ${id} not found`,
+          name: 'ActivityDoesNotExistError',
+          error: 'Activity does not exist',
+        });
+      res.send(routines);
+    } catch ({ name, message }) {
+      next({ name, message });
+    }
+  });
+
+  module.exports = activitiesRouter;
+
 
