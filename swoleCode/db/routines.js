@@ -15,14 +15,18 @@ async function getRoutineById(id){
     }
 }
 
-async function getRoutine(){
-    // WOKRING
-    const { rows } = await client.query(`
-        SELECT *
-        FROM routines;
-    `)
-    return rows
-}
+async function getAllRoutines() {
+    try {
+      const { rows: routines } = await client.query(`
+      SELECT routines.*, users.username AS "creatorName"
+      FROM routines
+      JOIN users ON routines."creatorId" = users.id 
+      `);
+      return attachActivitiesToRoutines(routines);
+    } catch (error) {
+      throw error
+    }
+  }
 
 async function getAllRoutinesByUser(creatorId) {
     // WORKING
@@ -129,7 +133,7 @@ try {
 module.exports = {
     createRoutine,
     getRoutineById,
-    getRoutine,
+    getAllRoutines,
     getAllRoutinesByUser,
     getAllPublicRoutines,
     destroyRoutine,
