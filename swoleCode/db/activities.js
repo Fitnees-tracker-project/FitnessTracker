@@ -45,7 +45,18 @@ async function createActivity({ name, description }) {
 }
 
 async function updateActivity ({ id, name, description }) {
-    
+    try{
+        const result = await client.query(`
+        UPDATE activities
+        SET name=$1,
+            description=$2
+        WHERE id=${id}
+        RETURNING *;
+        `, [name, description])
+    return result 
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 module.exports = {
