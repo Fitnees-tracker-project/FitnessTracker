@@ -1,9 +1,10 @@
 const express = require('express'); 
 const activitiesRouter = express.Router();
 const jwt = require ('jsonwebtoken');
-const { getAllActivities, getPublicRoutinesByActivity } = require('../db/activities');
+const { getAllActivities } = require('../db/activities');
 const { requireUser } = require("../API/utils"); 
 const { createActivity, updateActivity} = require ('../db/activities')
+const { getPublicRoutinesByActivity } = require ('../db/routines')
 
 //GET /activities 
 activitiesRouter.get('/', async (req, res, next) => {
@@ -41,14 +42,24 @@ activitiesRouter.post('/', async (req,res) => {
 });
 
 //PATCH /activities/:activityId
-//activitiesRouter.patch('/:routineId', async (req, res, ))
+activitiesRouter.patch('/:activityId', async (req, res, ) => {
+    const { activityId } = req.params
+    const { name, description } = req.body
+try{ 
+    const updatedActivity = await updateActivity({ id: activityId, name, description });
+    res.send({updatedActivity});
+} catch (error) {
+    console.log (error)
+    }
+})
 
 //GET /activities/:activityId/routines
 activitiesRouter.get('/:activityId/routines', async (req, res, next) => {
     const { activityId } = req.params
     console.log(activityId)
+    
     try {
-      const routines = await getPublicRoutinesByActivity(activity);
+      const routines = await getPublicRoutinesByActivity({id: activityId});
     res.send(routines);
 
     } catch (error) {

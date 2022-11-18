@@ -5,21 +5,22 @@ const {
     getRoutineById,
     updateRoutineActivity,
     destroyRoutineActivity
-} = require ("../db"); 
+} = require ("../db/routine-activities"); 
 routineActivitiesRouter.use((req, res, next ) => {
     console.log("request being made")
     next()
 })
+
 //PATCH /routineactivities/:routineActivityId 
-routineActivitiesRouter.patch('/:routineActivityId', async (req, res, next) => {
-    const { routineActivityId } = req.params
+routineActivitiesRouter.patch('/:routineactivityId', async (req, res, next) => {
+    const {routineactivityId} = req.params
     const { count, duration } = req.body
-    console.log('this is routineActivityId', routineActivityId)
+    console.log('this is routineActivityId', routineactivityId)
     
-try {
-    const updatedRoutineActivity = await updateRoutineActivity ({routineActivityId, count, duration})
-    console.log(updatedRoutineActivity)
-    res.send({ routineActivityId })
+try { 
+    const updatedRoutineActivity = await updateRoutineActivity ({id: routineactivityId, count, duration})
+    console.log(updatedRoutineActivity, "this is")
+    res.send({ updatedRoutineActivity })
     } catch (error) {
         console.error(error.detail)
     }
@@ -31,8 +32,6 @@ routineActivitiesRouter.delete('/:routineActivityId', async (req, res, next) => 
     console.log('this is routineActivityId', routineActivityId)
 try {
     const routineActivity = await getRoutineActivityById (routineActivityId);
-    const routine = await getRoutineById (routineActivity.routineId);
-    
     const destroyActivityFromRoutine = await destroyRoutineActivity (routineActivityId)
 res.send(destroyActivityFromRoutine);
 //this part might be wrong

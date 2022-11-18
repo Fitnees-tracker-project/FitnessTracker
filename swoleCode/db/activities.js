@@ -47,7 +47,7 @@ async function createActivity({ name, description }) {
 async function updateActivity ({ id, name, description }) {
     try{
         const result = await client.query(`
-        UPDATE activity 
+        UPDATE activities
         SET name=$1,
             description=$2
         WHERE id=${id}
